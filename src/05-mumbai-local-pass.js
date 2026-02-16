@@ -64,6 +64,5 @@ export function generateLocalPass(passenger) {
   const to= passenger.to.charAt(0).toUpperCase()+passenger.to.slice(1).toLowerCase();
   const clas = passenger.classType.toUpperCase()
   const Pass_ID = clas.charAt(0)+from.slice(0,3).toUpperCase()+to.slice(0,3).toUpperCase();
-  console.log(name,from,to,clas,Pass_ID)
    return `MUMBAI LOCAL PASS\n---\nName: ${name}\nFrom: ${from}\nTo: ${to}\nClass: ${clas}\nPass ID: ${Pass_ID}`
 }

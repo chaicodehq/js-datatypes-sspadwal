@@ -56,7 +56,7 @@ export function generateReportCard(student) {
   if (is_Mark_String) return null
   // Your code here
   const student_name = student.name;
-  console.log(obj_entry)
+ 
   const numSubjects = obj_entry.length;
   const totalMarks = obj_entry.reduce((a, b) => a + b[1], 0)
   const percentage = parseFloat((((totalMarks / (numSubjects * 100)) * 100)).toFixed(2))
@@ -70,7 +70,6 @@ export function generateReportCard(student) {
     grade = "F"
   }
   const markCollection = Object.entries(student.marks)
-  console.log(markCollection)
   const highestSubject = markCollection.reduce((a, b) => (b[1] > a[1] ? b : a));
   const lowestSubject = markCollection.reduce((a, b) => (b[1] < a[1] ? b : a));
   const d = markCollection.filter((item) => { return { item } })
