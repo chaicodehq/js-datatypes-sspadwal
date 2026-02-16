@@ -46,5 +46,61 @@
  *   // grandTotal: 1000 + 0 + 50 - 150 = 900
  */
 export function buildZomatoOrder(cart, coupon) {
-  // Your code here
+  // validation
+  if (!Array.isArray(cart) || cart.length === 0) return null;
+
+  let items = [];
+  let subtotal = 0;
+
+  // item calculations
+  for (let i of cart) {
+    if (i.qty <= 0) continue;
+
+    let addonTotal = 0;
+    for (let ad of (i.addons || [])) {
+      addonTotal += parseFloat(ad.split(":")[1]);
+    }
+
+    const itemTotal = (i.price + addonTotal) * i.qty;
+
+    items.push({
+      name: i.name,
+      qty: i.qty,
+      basePrice: i.price,
+      addonTotal,
+      itemTotal
+    });
+
+    subtotal += itemTotal;
+  }
+
+  // delivery fee
+  let deliveryFee = 0;
+  if (subtotal < 500) deliveryFee = 30;
+  else if (subtotal <= 999) deliveryFee = 15;
+
+  // gst
+  const gst = parseFloat((subtotal * 0.05).toFixed(2));
+
+  // normalize coupon safely
+  const code = typeof coupon === "string" ? coupon.toLowerCase() : "";
+
+  // discount
+  let discount = 0;
+
+  if (code === "first50") {
+    discount = Math.min(subtotal * 0.5, 150);
+  } else if (code === "flat100") {
+    discount = 100;
+  } else if (code === "freeship") {
+    discount = deliveryFee;
+    deliveryFee = 0;
+  }
+
+  // grand total
+  const grandTotal = parseFloat(
+    Math.max(subtotal + deliveryFee + gst - discount, 0).toFixed(2)
+  );
+
+  return { items, subtotal, deliveryFee, gst, discount, grandTotal };
 }

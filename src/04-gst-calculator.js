@@ -12,7 +12,7 @@
  *   - "electronics" => 18% GST (phones, laptops, etc.)
  *   - "luxury"      => 28% GST (cars, aerated drinks, tobacco)
  *   - Any other category => return null
- *
+ *   
  * Rules:
  *   - Calculate: gstAmount = amount * rate / 100
  *   - Calculate: totalAmount = amount + gstAmount
@@ -40,4 +40,29 @@
  */
 export function calculateGST(amount, category) {
   // Your code here
+  if(typeof category !== "string"){
+    return null
+  }
+  const categories=["essential" ,"food", "standard", "electronics", "luxury"]
+const lower_case_category=category.toLowerCase();  
+if(!categories.includes(lower_case_category)) {
+    return null;
+}
+if(amount <= 0 )return null
+if(!Number(amount)) return null
+if(amount == NaN) return null;
+if(amount === Infinity) return null;
+
+ const gst_rates = {
+  essential: 0,
+  food: 5,
+  standard: 12,
+  electronics: 18,
+  luxury: 28
+};
+
+const gstAmount = parseFloat((amount * gst_rates[lower_case_category] / 100).toFixed(2));
+const totalAmount = parseFloat((amount + gstAmount).toFixed(2))
+return { "baseAmount": amount, "gstRate": gst_rates[lower_case_category] , "gstAmount": gstAmount, "totalAmount": totalAmount }
+
 }

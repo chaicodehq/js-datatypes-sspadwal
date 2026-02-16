@@ -40,4 +40,31 @@
  */
 export function parseWhatsAppMessage(message) {
   // Your code here
+  if(message === null) return null;
+  if(typeof message !== "string") return null
+  if(!message.includes('-')) return null;
+  if(!message.includes(": ")) return null;
+  const date = message.slice(0,10)
+  const time = message.slice(12,17)
+  const colonIndex = message.indexOf(":",20)
+  const name=message.slice(20,colonIndex)
+  const text=message.slice(colonIndex+2)
+  const word_count=(text.split(" ")).length;
+  const funny=['😂',':)',"haha"]
+  const love=['love','pyaar','❤']
+  const split_msg=text.split(" ")
+  const hasfunny=split_msg.some((word)=>funny.includes(word.toLocaleLowerCase()))
+  const haslove=split_msg.some((word)=>love.includes(word.toLowerCase()))
+  let sentiment=null;
+  if(hasfunny && haslove){
+     sentiment="funny"
+  }else if(hasfunny){
+     sentiment="funny"
+  }else if(haslove){
+     sentiment="love"
+  }else{
+     sentiment="neutral"
+  }
+  
+  return {"date": date, "sender": name, "sentiment": sentiment, "text": text, "time": time, "wordCount": word_count}
 }

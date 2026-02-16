@@ -41,5 +41,44 @@
  *   // => { name: "Priya", totalMarks: 63, percentage: 31.5, grade: "F", ... }
  */
 export function generateReportCard(student) {
+  if (student === null) return null;
+  if (student.name === "") return null;
+  if (!Object.hasOwn(student, "name")) return null
+  if (!Object.hasOwn(student, "marks")) return null
+  if (Object.keys(student.marks).length === 0) return null
+  const obj_entry = Object.entries(student.marks)
+  const marks_Array = obj_entry.map((item) => item[1])
+  const max_marks = Math.max(...marks_Array)
+  const min_marks = Math.min(...marks_Array)
+  if (max_marks > 100) return null
+  if (min_marks < 0) return null
+  const is_Mark_String = marks_Array.some(item => typeof item !== "number")
+  if (is_Mark_String) return null
   // Your code here
+  const student_name = student.name;
+  console.log(obj_entry)
+  const numSubjects = obj_entry.length;
+  const totalMarks = obj_entry.reduce((a, b) => a + b[1], 0)
+  const percentage = parseFloat((((totalMarks / (numSubjects * 100)) * 100)).toFixed(2))
+  let grade = null;
+  if (percentage >= 90) grade = "A+"
+  else if (percentage >= 80) grade = "A"
+  else if (percentage >= 70) grade = "B"
+  else if (percentage >= 60) grade = "C"
+  else if (percentage >= 40) grade = "D"
+  else {
+    grade = "F"
+  }
+  const markCollection = Object.entries(student.marks)
+  console.log(markCollection)
+  const highestSubject = markCollection.reduce((a, b) => (b[1] > a[1] ? b : a));
+  const lowestSubject = markCollection.reduce((a, b) => (b[1] < a[1] ? b : a));
+  const d = markCollection.filter((item) => { return { item } })
+  const a = obj_entry.filter((item) => item[1] >= 40)
+  const passedSubjects = a.map((item) => item[0])
+  const b = obj_entry.filter((item) => item[1] < 40)
+  const failedSubjects = b.map((item) => item[0])
+  const subjectCount = (Object.keys(obj_entry)).length
+  // const 
+  return { name: student_name, totalMarks: totalMarks, percentage: percentage, grade: grade, highestSubject: highestSubject[0], lowestSubject: lowestSubject[0], passedSubjects: passedSubjects, failedSubjects: failedSubjects, subjectCount: subjectCount }
 }

@@ -16,7 +16,7 @@
  *   2. email: must be a string containing exactly one "@" and at least one "."
  *      after the "@". Use indexOf(), lastIndexOf(), includes().
  *      Error: "Invalid email format"
- *
+ *     bkbirla1002@gmail.com
  *   3. phone: must be a string of exactly 10 digits, starting with 6, 7, 8, or 9
  *      (Indian mobile numbers). Check each char is a digit.
  *      Error: "Invalid Indian phone number"
@@ -62,5 +62,83 @@
  *   // => { isValid: false, errors: { name: "...", email: "...", ... } }
  */
 export function validateForm(formData) {
-  // Your code here
+  const { name, email, phone, age, pincode, state, agreeTerms } = formData;
+
+  const errors = {};
+
+
+  if (typeof name !== "string" || name.trim().length < 2 || name.trim().length > 50) {
+    errors.name = "Name must be 2-50 characters";
+  }
+
+  
+  if (typeof email !== "string") {
+    errors.email = "Invalid email format";
+  } else {
+    const atIndex = email.indexOf("@");
+    const lastAtIndex = email.lastIndexOf("@");
+    const dotAfterAt = email.indexOf(".", atIndex);
+
+    if (atIndex === -1 || atIndex !== lastAtIndex || dotAfterAt === -1) {
+      errors.email = "Invalid email format";
+    }
+  }
+
+  
+  if (typeof phone !== "string" || phone.length !== 10 || !"6789".includes(phone[0])) {
+    errors.phone = "Invalid Indian phone number";
+  } else {
+    for (let ch of phone) {
+      if (ch < "0" || ch > "9") {
+        errors.phone = "Invalid Indian phone number";
+        break;
+      }
+    }
+  }
+
+  
+  const ageNum = Number(age);
+
+  if (
+    isNaN(ageNum) ||
+    !Number.isInteger(ageNum) ||
+    ageNum < 16 ||
+    ageNum > 100
+  ) {
+    errors.age = "Age must be an integer between 16 and 100";
+  }
+
+  
+  if (
+    typeof pincode !== "string" ||
+    pincode.length !== 6 ||
+    pincode.startsWith("0")
+  ) {
+    errors.pincode = "Invalid Indian pincode";
+  } else {
+    for (let ch of pincode) {
+      if (ch < "0" || ch > "9") {
+        errors.pincode = "Invalid Indian pincode";
+        break;
+      }
+    }
+  }
+
+  
+  const stateValue = state?.trim() ?? "";
+
+  if (stateValue === "") {
+    errors.state = "State is required";
+  }
+
+  
+  if (!Boolean(agreeTerms)) {
+    errors.agreeTerms = "Must agree to terms";
+  }
+
+  
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  };
 }
